@@ -357,7 +357,7 @@ procedure TextWindowSelect(var state: TTextWindowState; hyperlinkAsSelect, viewi
 				if InputJoystickMoved then begin
 					Delay(35);
 				end;
-			until (InputKeyPressed = KEY_ESCAPE) or (InputKeyPressed = KEY_ENTER) or InputShiftPressed;
+			until (InputKeyPressed = KEY_ESCAPE) or (InputKeyPressed = KEY_ENTER) or (InputShiftPressed and InputJoystickEnabled);
 			if InputKeyPressed = KEY_ESCAPE then begin
 				InputKeyPressed := #0;
 				TextWindowRejected := true;
