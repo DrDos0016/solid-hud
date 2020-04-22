@@ -1317,6 +1317,7 @@ procedure ElementPlayerTick(statId: integer);
 		unk1, unk2, unk3: integer;
 		i: integer;
 		bulletCount: integer;
+		numStr: string[5];
 	begin
 		with Board.Stats[statId] do begin
 			if World.Info.EnergizerTicks > 0 then begin
@@ -1467,6 +1468,8 @@ procedure ElementPlayerTick(statId: integer);
 
 			if World.Info.EnergizerTicks > 0 then begin
 				World.Info.EnergizerTicks := World.Info.EnergizerTicks - 1;
+				Str(World.Info.EnergizerTicks, numStr);
+				VideoWriteText(73, 9, $1E, numStr);
 
 				if World.Info.EnergizerTicks = 10 then
 					SoundQueue(9, #32#3#26#3#23#3#22#3#21#3#19#3#16#3)

@@ -1092,52 +1092,123 @@ procedure GameUpdateSidebar;
 	var
 		numStr: string[8];
 		i: integer;
+		tempCount: integer;
 	begin
 		if GameStateElement = E_PLAYER then begin
-			if Board.Info.TimeLimitSec > 0 then begin
-				VideoWriteText(64, 6, $1E, '   Time:');
-				Str(Board.Info.TimeLimitSec - World.Info.BoardTimeSec, numStr);
-				VideoWriteText(72, 6, $1E, numStr + ' ');
-			end else begin
-				SidebarClearLine(6);
+			{ Re-Enter When Zapped }
+			if Board.Info.ReenterWhenZapped then
+				VideoWriteText(62, 7, $9C, #33) { Do Re-Enter }
+			else
+				VideoWriteText(62, 7, $1F, #2); { Don't Re-Enter }
+
+			{ Digit spacing }
+			for i := 7 to 10 do begin
+				VideoWriteText(64, i, $10, '.....');
+				VideoWriteText(73, i, $10, '.....');
 			end;
+			VideoWriteText(64, 12, $10, '...');
+			VideoWriteText(70, 12, $10, '..');
+			VideoWriteText(64, 13, $10, '...');
+			VideoWriteText(70, 13, $10, '..');
 
 			if World.Info.Health < 0 then
 				World.Info.Health := 0;
 
+			{ Display values }
 			Str(World.Info.Health, numStr);
-			VideoWriteText(72, 7, $1E, numStr + ' ');
+			VideoWriteText(64, 7, $1E, numStr);
 			Str(World.Info.Ammo, numStr);
-			VideoWriteText(72, 8, $1E, numStr + '  ');
-			Str(World.Info.Torches, numStr);
-			VideoWriteText(72, 9, $1E, numStr + ' ');
+			VideoWriteText(73, 7, $1E, numStr);
 			Str(World.Info.Gems, numStr);
-			VideoWriteText(72, 10, $1E, numStr + ' ');
+			VideoWriteText(64, 8, $1E, numStr);
 			Str(World.Info.Score, numStr);
-			VideoWriteText(72, 11, $1E, numStr + ' ');
+			VideoWriteText(73, 8, $1E, numStr);
+			Str(World.Info.Torches, numStr);
+			VideoWriteText(64, 9, $1E, numStr);
 
+			{ Display Torch Tick Character -- Assumes TORCH_DURATION = 200 }
 			if World.Info.TorchTicks = 0 then
-				VideoWriteText(75, 9, $16, '    ')
+				VideoWriteText(62, 9, $16, #157) { Torches }
 			else begin
-				for i := 2 to 5 do begin
-					if i <= ((World.Info.TorchTicks * 5) div TORCH_DURATION) then
-						VideoWriteText(73 + i, 9, $16, #177)
-					else
-						VideoWriteText(73 + i, 9, $16, #176);
-				end;
+				if World.Info.TorchTicks >= 161 then
+					VideoWriteText(62, 9, $16, #219) { Solid }
+				else if World.Info.TorchTicks >= 121 then
+					VideoWriteText(62, 9, $16, #178) { Normal }
+				else if World.Info.TorchTicks >= 81 then
+					VideoWriteText(62, 9, $16, #177) { Breakable }
+				else if World.Info.TorchTicks >= 41 then
+					VideoWriteText(62, 9, $16, #176) { Water }
+				else if World.Info.TorchTicks >= 1 then
+					VideoWriteText(62, 9, $96, #176); { Blinking Water }
 			end;
 
+			{ Display keys }
 			for i := 1 to 7 do begin
 				if World.Info.Keys[i] then
-					VideoWriteText(71 + i, 12, $18 + i, ElementDefs[E_KEY].Character)
+					VideoWriteText(62 + i, 10, $18 + i, ElementDefs[E_KEY].Character)
 				else
-					VideoWriteText(71 + i, 12, $1F, ' ');
+					VideoWriteText(62 + i, 10, $10, ElementDefs[E_KEY].Character);
 			end;
 
-			if SoundEnabled then
-				VideoWriteText(65, 15, $1F, ' Be quiet')
+			{ Display Time }
+			if Board.Info.TimeLimitSec > 0 then begin
+				Str(Board.Info.TimeLimitSec - World.Info.BoardTimeSec, numStr);
+				VideoWriteText(73, 10, $1E, numStr);
+			end;
+
+			{ Shots per board }
+			Str(Board.Info.MaxShots, numStr);
+			VideoWriteText(64, 12, $1E, numStr);
+
+			{ Passages }
+			tempCount := 0;
+			for i := 1 to Board.StatCount do
+				if (Board.Tiles[Board.Stats[i].X][Board.Stats[i].Y].Element = E_PASSAGE) then
+					tempCount := tempCount + 1;
+			Str(tempCount, numStr);
+			VideoWriteText(70, 12, $1E, numStr);
+
+			{ Board Exits (<v^>) }
+			if Board.Info.NeighborBoards[2] <> 0 then
+				VideoWriteText(74, 12, $1E, #27)
 			else
-				VideoWriteText(65, 15, $1F, ' Be noisy');
+				VideoWriteText(74, 12, $10, #27);
+
+			if Board.Info.NeighborBoards[1] <> 0 then
+				VideoWriteText(75, 12, $1E, #25)
+			else
+				VideoWriteText(75, 12, $10, #25);
+
+			if Board.Info.NeighborBoards[0] <> 0 then
+				VideoWriteText(76, 12, $1E, #24)
+			else
+				VideoWriteText(76, 12, $10, #24);
+
+			if Board.Info.NeighborBoards[3] <> 0 then
+				VideoWriteText(77, 12, $1E, #26)
+			else
+				VideoWriteText(77, 12, $10, #26);
+
+			{ Stat Count }
+			Str(Board.StatCount, numStr);
+			VideoWriteText(64, 13, $1E, numStr);
+
+			{ Flag Count }
+			i := 1;
+			tempCount := 0;
+			while (i <= MAX_FLAG) do begin
+				if (Length(World.Info.Flags[i]) <> 0) then
+					tempCount := tempcount + 1;
+				i := i + 1;
+			end;
+			Str(tempCount, numStr);
+			VideoWriteText(70, 13, $1E, numStr);
+
+			{ Sound Icon}
+			if SoundEnabled then
+				VideoWriteText(73, 13, $1F, #14) { Sound On }
+			else
+				VideoWriteText(73, 13, $18, #14); { Sound Off }
 
 			if DebugEnabled then begin
 				Str(MemAvail, numStr);
@@ -1417,7 +1488,10 @@ procedure GamePlayLoop(boardChanged: boolean);
 	var
 		exitLoop: boolean;
 		pauseBlink: boolean;
+		audioBufferLength: string[3];
 	procedure GameDrawSidebar;
+		var
+			i: integer;
 		begin
 			SidebarClear;
 			SidebarClearLine(0);
@@ -1427,32 +1501,18 @@ procedure GamePlayLoop(boardChanged: boolean);
 			VideoWriteText(62, 1, $70, '      ZZT      ');
 			VideoWriteText(61, 2, $1F, '    - - - - -      ');
 			if GameStateElement = E_PLAYER then begin
-				VideoWriteText(64, 7, $1E, ' Health:');
-				VideoWriteText(64, 8, $1E, '   Ammo:');
-				VideoWriteText(64, 9, $1E, 'Torches:');
-				VideoWriteText(64, 10, $1E, '   Gems:');
-				VideoWriteText(64, 11, $1E, '  Score:');
-				VideoWriteText(64, 12, $1E, '   Keys:');
-				VideoWriteText(62, 7, $1F, ElementDefs[E_PLAYER].Character);
-				VideoWriteText(62, 8, $1B, ElementDefs[E_AMMO].Character);
-				VideoWriteText(62, 9, $16, ElementDefs[E_TORCH].Character);
-				VideoWriteText(62, 10, $1B, ElementDefs[E_GEM].Character);
-				VideoWriteText(62, 12, $1F, ElementDefs[E_KEY].Character);
-				VideoWriteText(62, 14, $70, ' T ');
-				VideoWriteText(65, 14, $1F, ' Torch');
-				VideoWriteText(62, 15, $30, ' B ');
-				VideoWriteText(62, 16, $70, ' H ');
-				VideoWriteText(65, 16, $1F, ' Help');
-				VideoWriteText(67, 18, $30, ' '#24#25#26#27' ');
-				VideoWriteText(72, 18, $1F, ' Move');
-				VideoWriteText(61, 19, $70, ' Shift '#24#25#26#27' ');
-				VideoWriteText(72, 19, $1F, ' Shoot');
-				VideoWriteText(62, 21, $70, ' S ');
-				VideoWriteText(65, 21, $1F, ' Save game');
-				VideoWriteText(62, 22, $30, ' P ');
-				VideoWriteText(65, 22, $1F, ' Pause');
-				VideoWriteText(62, 23, $70, ' Q ');
-				VideoWriteText(65, 23, $1F, ' Quit');
+				{ Static Icons }
+				VideoWriteText(71, 7, $1B, #132); { Ammo }
+				VideoWriteText(62, 8, $1B, #4); { Gems }
+				VideoWriteText(71, 8, $1F, #158); { Score }
+				VideoWriteText(71, 9, $1D, #127); { Energizer Ticks }
+				VideoWriteText(71, 10, $1C, #19); { Time Remaining }
+
+				VideoWriteText(62, 12, $1F, #248); { Max Shots }
+				VideoWriteText(68, 12, $1B, #240); { Passages }
+				VideoWriteText(62, 13, $1E, #1); { Stat Elements }
+				VideoWriteText(68, 13, $1C, #226); { Flags }
+
 			end else if GameStateElement = E_MONITOR then begin
 				SidebarPromptSlider(false, 66, 21, 'Game speed:;FS', TickSpeed);
 				VideoWriteText(62, 21, $70, ' S ');
@@ -1479,6 +1539,8 @@ procedure GamePlayLoop(boardChanged: boolean);
 					VideoWriteText(62, 18, $30, ' E ');
 					VideoWriteText(65, 18, $1E, ' Board Editor');
 				end;
+
+				VideoWriteText(65, 24, $1B, 'Solid '#219' HUD v01') { Solid HUD watermark }
 			end;
 		end;
 	begin
@@ -1578,6 +1640,19 @@ procedure GamePlayLoop(boardChanged: boolean);
 			end;
 
 			if (CurrentStatTicked > Board.StatCount) and not GamePlayExitRequested then begin
+				{ Write audio buffer length to sidebar }
+				if (Length(SoundBuffer) - SoundBufferPos + 1 >= 0) then
+					Str(Length(SoundBuffer) - SoundBufferPos + 1, audioBufferLength)
+				else
+					Str(0, audioBufferLength);
+
+				VideoWriteText(75, 13, $1E, audioBufferLength);
+				{ Empty spaces }
+				if Length(audioBufferLength) = 2 then
+					VideoWriteText(77, 13, $10, '.')
+				else if Length(audioBufferLength) = 1 then
+					VideoWriteText(76, 13, $10, '..');
+
 				{ all stats ticked }
 				if SoundHasTimeElapsed(TickTimeCounter, TickTimeDuration) then begin
 					{ next cycle }
