@@ -701,6 +701,8 @@ function WorldLoad(filename, extension: TString50; titleOnly: boolean): boolean;
 		end;
 	begin
 		WorldLoad := false;
+		NoClip := false;
+		Frozen := false;
 		loadProgress := 0;
 
 		SidebarClearLine(4);
@@ -1448,6 +1450,12 @@ procedure GameDebugPrompt;
 				WorldClearFlag(input);
 		end;
 
+		{ Alternate for '-' without flag clearing }
+		if input[1] = '/' then begin
+			toggle := false;
+			input := Copy(input, 2, Length(input) - 1);
+		end;
+
 		DebugEnabled := WorldGetFlagPosition('DEBUG') >= 0;
 
 		if input = 'HEALTH' then
@@ -1465,6 +1473,29 @@ procedure GameDebugPrompt;
 		else if input = 'DARK' then begin
 			Board.Info.IsDark := toggle;
 			TransitionDrawToBoard;
+		end else if input = 'PASSAGE' then begin
+			if GameStateElement = E_PLAYER then begin
+				BoardChange(EditorSelectBoard('Teleport to', World.Info.CurrentBoard, false));
+				GamePaused := true;
+				TransitionDrawBoardChange;
+				BoardEnter;
+			end;
+		end else if input = 'SPEED' then begin
+			SidebarPromptSlider(true, 63, 3, 'Game speed:;FS', TickSpeed);
+			SidebarClearLine(3);
+			TickTimeDuration := TickSpeed * 2;
+			InputKeyPressed := #0;
+		end else if (input = 'VISIBLE') and toggle then begin
+			ElementDefs[E_INVISIBLE].Character := #176;
+			ElementDefs[28].Color := COLOR_CHOICE_ON_BLACK;
+			TransitionDrawToBoard;
+		end else if (input = 'VISIBLE') and not toggle then begin
+			ElementDefs[E_INVISIBLE].Character := ' ';
+			TransitionDrawToBoard;
+		end else if (input = 'NOCLIP') then begin
+			NoClip := toggle;
+		end else if (input = 'FREEZE') then begin
+			Frozen := toggle;
 		end else if input = 'ZAP' then begin
 			for i := 0 to 3 do begin
 				BoardDamageTile(Board.Stats[0].X + NeighborDeltaX[i], Board.Stats[0].Y + NeighborDeltaY[i]);
@@ -1488,6 +1519,7 @@ procedure GamePlayLoop(boardChanged: boolean);
 	var
 		exitLoop: boolean;
 		pauseBlink: boolean;
+		unpauseGame: boolean;
 		audioBufferLength: string[3];
 	procedure GameDrawSidebar;
 		var
@@ -1598,6 +1630,12 @@ procedure GamePlayLoop(boardChanged: boolean);
 				if InputKeyPressed = KEY_ESCAPE then
 					GamePromptEndPlay;
 
+				unpauseGame := false;
+
+				if UpCase(InputKeyPressed) = 'P' then begin
+					unpauseGame := true;
+				end;
+
 				if (InputDeltaX <> 0) or (InputDeltaY <> 0) then begin
 					ElementDefs[Board.Tiles[Board.Stats[0].X + InputDeltaX][Board.Stats[0].Y + InputDeltaY].Element].TouchProc(
 						Board.Stats[0].X + InputDeltaX, Board.Stats[0].Y + InputDeltaY, 0, InputDeltaX, InputDeltaY);
@@ -1619,9 +1657,14 @@ procedure GamePlayLoop(boardChanged: boolean);
 						DrawPlayerSurroundings(Board.Stats[0].X, Board.Stats[0].Y, 0);
 						DrawPlayerSurroundings(Board.Stats[0].X - InputDeltaX, Board.Stats[0].Y - InputDeltaY, 0);
 					end;
+					unpauseGame := true;
+				end;
 
+				if unpauseGame then begin
 					{ Unpause }
 					GamePaused := false;
+					{ The player might be invisible if the stat wasn't moved in the above code }
+					BoardDrawTile(Board.Stats[0].X, Board.Stats[0].Y);
 					SidebarClearLine(5);
 					CurrentTick := Random(100);
 					CurrentStatTicked := Board.StatCount + 1;
@@ -1638,6 +1681,9 @@ procedure GamePlayLoop(boardChanged: boolean);
 					end;
 				end;
 			end;
+
+			if frozen then
+				CurrentStatTicked := Board.StatCount + 1;
 
 			if (CurrentStatTicked > Board.StatCount) and not GamePlayExitRequested then begin
 				{ Write audio buffer length to sidebar }

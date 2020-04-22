@@ -1349,6 +1349,7 @@ procedure ElementPlayerTick(statId: integer);
 				TickTimeDuration := 0;
 				SoundBlockQueueing := true;
 			end;
+
 			if InputShiftPressed or (InputKeyPressed = ' ') then begin
 				if InputShiftPressed and ((InputDeltaX <> 0) or (InputDeltaY <> 0)) then begin
 					PlayerDirX := InputDeltaX;
@@ -1392,7 +1393,7 @@ procedure ElementPlayerTick(statId: integer);
 				if (InputDeltaX <> 0) or (InputDeltaY <> 0) then begin
 					if SoundEnabled and not SoundIsPlaying then
 						Sound(110);
-					if ElementDefs[Board.Tiles[X + InputDeltaX][Y + InputDeltaY].Element].Walkable then begin
+					if NoClip or ElementDefs[Board.Tiles[X + InputDeltaX][Y + InputDeltaY].Element].Walkable then begin
 						if SoundEnabled and not SoundIsPlaying then
 							NoSound;
 

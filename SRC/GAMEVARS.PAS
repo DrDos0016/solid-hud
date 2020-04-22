@@ -131,7 +131,7 @@ interface
 			Tiles: array[0 .. BOARD_WIDTH + 1] of array[0 .. BOARD_HEIGHT + 1] of TTile;
 			StatCount: integer;
 			Stats: array[0 .. MAX_STAT + 1] of TStat;
-			Info: TBoardInfo;      
+			Info: TBoardInfo;
 		end;
 		TWorld = record
 			BoardCount: integer;
@@ -209,6 +209,8 @@ interface
 		ParsingConfigFile: boolean;
 		ResetConfig: boolean; { This flag is a remnant from ZZT 3.0. }
 		JustStarted: boolean;
+		NoClip: boolean;
+		Frozen: boolean;
 
 		WorldFileDescCount: integer;
 		WorldFileDescKeys: array[1 .. 10] of TString50;
