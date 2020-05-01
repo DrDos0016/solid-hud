@@ -1572,7 +1572,7 @@ procedure GamePlayLoop(boardChanged: boolean);
 					VideoWriteText(65, 18, $1E, ' Board Editor');
 				end;
 
-				VideoWriteText(65, 24, $1B, 'Solid '#219' HUD v01') { Solid HUD watermark }
+				VideoWriteText(65, 24, $1B, 'Solid '#219' HUD v02') { Solid HUD watermark }
 			end;
 		end;
 	begin

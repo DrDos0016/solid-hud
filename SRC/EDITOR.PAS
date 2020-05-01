@@ -618,10 +618,6 @@ procedure EditorLoop;
 		end;
 
 	begin
-		if World.Info.IsSave or (WorldGetFlagPosition('SECRET') >= 0) then begin
-			WorldUnload;
-			WorldCreate;
-		end;
 		InitElementsEditor;
 		CurrentTick := 0;
 		wasModified := false;
@@ -733,21 +729,6 @@ procedure EditorLoop;
 					'L': begin
 						EditorAskSaveChanged;
 						if (InputKeyPressed <> KEY_ESCAPE) and GameWorldLoad('.ZZT') then begin
-							if World.Info.IsSave or (WorldGetFlagPosition('SECRET') >= 0) then begin
-								if not DebugEnabled then begin
-									SidebarClearLine(3);
-									SidebarClearLine(4);
-									SidebarClearLine(5);
-									VideoWriteText(63, 4, $1E, 'Can not edit');
-									if World.Info.IsSave then
-										VideoWriteText(63, 5, $1E, 'a saved game!')
-									else
-										VideoWriteText(63, 5, $1E, '  ' + World.Info.Name + '!');
-									PauseOnError;
-									WorldUnload;
-									WorldCreate;
-								end;
-							end;
 							wasModified := false;
 							EditorDrawRefresh;
 						end;
