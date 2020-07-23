@@ -1099,68 +1099,68 @@ procedure GameUpdateSidebar;
 		if GameStateElement = E_PLAYER then begin
 			{ Re-Enter When Zapped }
 			if Board.Info.ReenterWhenZapped then
-				VideoWriteText(62, 7, $9C, #33) { Do Re-Enter }
+				VideoWriteText(62, 6, $9C, #33) { Do Re-Enter }
 			else
-				VideoWriteText(62, 7, $1F, #2); { Don't Re-Enter }
+				VideoWriteText(62, 6, $1F, #2); { Don't Re-Enter }
 
 			{ Digit spacing }
-			for i := 7 to 10 do begin
+			for i := 6 to 9 do begin
 				VideoWriteText(64, i, $10, '.....');
 				VideoWriteText(73, i, $10, '.....');
 			end;
-			VideoWriteText(64, 12, $10, '...');
-			VideoWriteText(70, 12, $10, '..');
-			VideoWriteText(64, 13, $10, '...');
-			VideoWriteText(70, 13, $10, '..');
+			VideoWriteText(64, 10, $10, '...');
+			VideoWriteText(70, 10, $10, '..');
+			VideoWriteText(64, 11, $10, '...');
+			VideoWriteText(70, 11, $10, '..');
 
 			if World.Info.Health < 0 then
 				World.Info.Health := 0;
 
 			{ Display values }
 			Str(World.Info.Health, numStr);
-			VideoWriteText(64, 7, $1E, numStr);
+			VideoWriteText(64, 6, $1E, numStr);
 			Str(World.Info.Ammo, numStr);
-			VideoWriteText(73, 7, $1E, numStr);
+			VideoWriteText(73, 6, $1E, numStr);
 			Str(World.Info.Gems, numStr);
-			VideoWriteText(64, 8, $1E, numStr);
+			VideoWriteText(64, 7, $1E, numStr);
 			Str(World.Info.Score, numStr);
-			VideoWriteText(73, 8, $1E, numStr);
+			VideoWriteText(73, 7, $1E, numStr);
 			Str(World.Info.Torches, numStr);
-			VideoWriteText(64, 9, $1E, numStr);
+			VideoWriteText(64, 8, $1E, numStr);
 
 			{ Display Torch Tick Character -- Assumes TORCH_DURATION = 200 }
 			if World.Info.TorchTicks = 0 then
-				VideoWriteText(62, 9, $16, #157) { Torches }
+				VideoWriteText(62, 8, $16, #157) { Torches }
 			else begin
 				if World.Info.TorchTicks >= 161 then
-					VideoWriteText(62, 9, $16, #219) { Solid }
+					VideoWriteText(62, 8, $16, #219) { Solid }
 				else if World.Info.TorchTicks >= 121 then
-					VideoWriteText(62, 9, $16, #178) { Normal }
+					VideoWriteText(62, 8, $16, #178) { Normal }
 				else if World.Info.TorchTicks >= 81 then
-					VideoWriteText(62, 9, $16, #177) { Breakable }
+					VideoWriteText(62, 8, $16, #177) { Breakable }
 				else if World.Info.TorchTicks >= 41 then
-					VideoWriteText(62, 9, $16, #176) { Water }
+					VideoWriteText(62, 8, $16, #176) { Water }
 				else if World.Info.TorchTicks >= 1 then
-					VideoWriteText(62, 9, $96, #176); { Blinking Water }
+					VideoWriteText(62, 8, $96, #176); { Blinking Water }
 			end;
 
 			{ Display keys }
 			for i := 1 to 7 do begin
 				if World.Info.Keys[i] then
-					VideoWriteText(62 + i, 10, $18 + i, ElementDefs[E_KEY].Character)
+					VideoWriteText(62 + i, 9, $18 + i, ElementDefs[E_KEY].Character)
 				else
-					VideoWriteText(62 + i, 10, $10, ElementDefs[E_KEY].Character);
+					VideoWriteText(62 + i, 9, $10, ElementDefs[E_KEY].Character);
 			end;
 
 			{ Display Time }
 			if Board.Info.TimeLimitSec > 0 then begin
 				Str(Board.Info.TimeLimitSec - World.Info.BoardTimeSec, numStr);
-				VideoWriteText(73, 10, $1E, numStr);
+				VideoWriteText(73, 9, $1E, numStr);
 			end;
 
 			{ Shots per board }
 			Str(Board.Info.MaxShots, numStr);
-			VideoWriteText(64, 12, $1E, numStr);
+			VideoWriteText(64, 10, $1E, numStr);
 
 			{ Passages }
 			tempCount := 0;
@@ -1168,32 +1168,32 @@ procedure GameUpdateSidebar;
 				if (Board.Tiles[Board.Stats[i].X][Board.Stats[i].Y].Element = E_PASSAGE) then
 					tempCount := tempCount + 1;
 			Str(tempCount, numStr);
-			VideoWriteText(70, 12, $1E, numStr);
+			VideoWriteText(70, 10, $1E, numStr);
 
 			{ Board Exits (<v^>) }
 			if Board.Info.NeighborBoards[2] <> 0 then
-				VideoWriteText(74, 12, $1E, #27)
+				VideoWriteText(74, 10, $1E, #27)
 			else
-				VideoWriteText(74, 12, $10, #27);
+				VideoWriteText(74, 10, $10, #27);
 
 			if Board.Info.NeighborBoards[1] <> 0 then
-				VideoWriteText(75, 12, $1E, #25)
+				VideoWriteText(75, 10, $1E, #25)
 			else
-				VideoWriteText(75, 12, $10, #25);
+				VideoWriteText(75, 10, $10, #25);
 
 			if Board.Info.NeighborBoards[0] <> 0 then
-				VideoWriteText(76, 12, $1E, #24)
+				VideoWriteText(76, 10, $1E, #24)
 			else
-				VideoWriteText(76, 12, $10, #24);
+				VideoWriteText(76, 10, $10, #24);
 
 			if Board.Info.NeighborBoards[3] <> 0 then
-				VideoWriteText(77, 12, $1E, #26)
+				VideoWriteText(77, 10, $1E, #26)
 			else
-				VideoWriteText(77, 12, $10, #26);
+				VideoWriteText(77, 10, $10, #26);
 
 			{ Stat Count }
 			Str(Board.StatCount, numStr);
-			VideoWriteText(64, 13, $1E, numStr);
+			VideoWriteText(64, 11, $1E, numStr);
 
 			{ Flag Count }
 			i := 1;
@@ -1204,13 +1204,13 @@ procedure GameUpdateSidebar;
 				i := i + 1;
 			end;
 			Str(tempCount, numStr);
-			VideoWriteText(70, 13, $1E, numStr);
+			VideoWriteText(70, 11, $1E, numStr);
 
 			{ Sound Icon}
 			if SoundEnabled then
-				VideoWriteText(73, 13, $1F, #14) { Sound On }
+				VideoWriteText(73, 11, $1F, #14) { Sound On }
 			else
-				VideoWriteText(73, 13, $18, #14); { Sound Off }
+				VideoWriteText(73, 11, $18, #14); { Sound Off }
 
 			if DebugEnabled then begin
 				Str(MemAvail, numStr);
@@ -1473,7 +1473,7 @@ procedure GameDebugPrompt;
 		else if input = 'DARK' then begin
 			Board.Info.IsDark := toggle;
 			TransitionDrawToBoard;
-		end else if input = 'PASSAGE' then begin
+		end else if (input = 'PASSAGE') or (input = 'TELEPORT') then begin
 			if GameStateElement = E_PLAYER then begin
 				BoardChange(EditorSelectBoard('Teleport to', World.Info.CurrentBoard, false));
 				GamePaused := true;
@@ -1534,16 +1534,16 @@ procedure GamePlayLoop(boardChanged: boolean);
 			VideoWriteText(61, 2, $1F, '    - - - - -      ');
 			if GameStateElement = E_PLAYER then begin
 				{ Static Icons }
-				VideoWriteText(71, 7, $1B, #132); { Ammo }
-				VideoWriteText(62, 8, $1B, #4); { Gems }
-				VideoWriteText(71, 8, $1F, #158); { Score }
-				VideoWriteText(71, 9, $1D, #127); { Energizer Ticks }
-				VideoWriteText(71, 10, $1C, #19); { Time Remaining }
+				VideoWriteText(71, 6, $1B, #132); { Ammo }
+				VideoWriteText(62, 7, $1B, #4); { Gems }
+				VideoWriteText(71, 7, $1F, #158); { Score }
+				VideoWriteText(71, 8, $1D, #127); { Energizer Ticks }
+				VideoWriteText(71, 9, $1C, #19); { Time Remaining }
 
-				VideoWriteText(62, 12, $1F, #248); { Max Shots }
-				VideoWriteText(68, 12, $1B, #240); { Passages }
-				VideoWriteText(62, 13, $1E, #1); { Stat Elements }
-				VideoWriteText(68, 13, $1C, #226); { Flags }
+				VideoWriteText(62, 10, $1F, #248); { Max Shots }
+				VideoWriteText(68, 10, $1B, #240); { Passages }
+				VideoWriteText(62, 11, $1E, #1); { Stat Elements }
+				VideoWriteText(68, 11, $1C, #226); { Flags }
 
 			end else if GameStateElement = E_MONITOR then begin
 				SidebarPromptSlider(false, 66, 21, 'Game speed:;FS', TickSpeed);
@@ -1692,12 +1692,12 @@ procedure GamePlayLoop(boardChanged: boolean);
 				else
 					Str(0, audioBufferLength);
 
-				VideoWriteText(75, 13, $1E, audioBufferLength);
+				VideoWriteText(75, 11, $1E, audioBufferLength);
 				{ Empty spaces }
 				if Length(audioBufferLength) = 2 then
-					VideoWriteText(77, 13, $10, '.')
+					VideoWriteText(77, 11, $10, '.')
 				else if Length(audioBufferLength) = 1 then
-					VideoWriteText(76, 13, $10, '..');
+					VideoWriteText(76, 11, $10, '..');
 
 				{ all stats ticked }
 				if SoundHasTimeElapsed(TickTimeCounter, TickTimeDuration) then begin
