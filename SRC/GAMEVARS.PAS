@@ -27,6 +27,7 @@ unit GameVars;
 
 interface
 	const
+		SOLID_HUD_VERSION = '03';
 		MAX_STAT = 150;
 		MAX_ELEMENT = 53;
 		MAX_BOARD = 100;
@@ -207,7 +208,7 @@ interface
 		EditorEnabled: boolean;
 		GameVersion: TString50;
 		ParsingConfigFile: boolean;
-		ResetConfig: boolean; { This flag is a remnant from ZZT 3.0. }
+		RunConfig: boolean;
 		JustStarted: boolean;
 		NoClip: boolean;
 		Frozen: boolean;

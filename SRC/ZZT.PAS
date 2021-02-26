@@ -33,6 +33,7 @@ procedure ParseArguments;
 		i: integer;
 		pArg: string;
 	begin
+		RunConfig := false;
 		for i := 1 to ParamCount do begin
 			pArg := ParamStr(i);
 			if pArg[1] = '/' then begin
@@ -41,7 +42,7 @@ procedure ParseArguments;
 						SoundTimeCheckCounter := 0;
 						UseSystemTimeForElapsed := false;
 					end;
-					'R': ResetConfig := true;
+					'C': RunConfig := true;
 				end;
 			end else begin
 				StartupWorldFileName := pArg;
@@ -84,44 +85,47 @@ procedure GameConfigure;
 
 		ParsingConfigFile := false;
 
-		Window(1, 1, 80, 25);
-		TextBackground(Black);
-		ClrScr;
-		TextColor(White);
-		TextColor(White);
-		Writeln;
-		Writeln('                                 <=-  ZZT  -=>');
-		TextColor(Yellow);
-		if Length(ConfigRegistration) = 0 then
-			Writeln('                             Shareware version 3.2')
-		else
-			Writeln('                                  Version  3.2');
-		Writeln('                            Created by Tim Sweeney');
-		GotoXY(1, 7);
-		TextColor(Blue);
-		Write('================================================================================');
-		GotoXY(1, 24);
-		Write('================================================================================');
-		TextColor(White);
-		GotoXY(30, 7);
-		Write(' Game Configuration ');
-		GotoXY(1, 25);
-		Write(' Copyright (c) 1991 Epic MegaGames                         Press ... to abort');
-		TextColor(Black);
-		TextBackground(LightGray);
-		GotoXY(66, 25);
-		Write('ESC');
-		Window(1, 8, 80, 23);
-		TextColor(Yellow);
-		TextBackground(Black);
-		ClrScr;
-		TextColor(Yellow);
-		if not InputConfigure then
-			GameTitleExitRequested := true
-		else begin
-			TextColor(LightGreen);
-			if not VideoConfigure then
-				GameTitleExitRequested := true;
+		if RunConfig then begin
+			Window(1, 1, 80, 25);
+			TextBackground(Black);
+			ClrScr;
+			TextColor(White);
+			TextColor(White);
+			Writeln;
+			Writeln('  <=-  ZZT  -=>                                             <=-  Solid HUD -=>');
+			TextColor(Yellow);
+			Writeln('  Version  3.2                                                     Version  ' + SOLID_HUD_VERSION);
+			Writeln('  Created by Tim Sweeney                                    Created by Dr. Dos');
+			GotoXY(1, 7);
+			TextColor(Blue);
+			Write('================================================================================');
+			GotoXY(1, 24);
+			Write('================================================================================');
+			TextColor(White);
+			GotoXY(30, 7);
+			Write(' Game Configuration ');
+			GotoXY(1, 25);
+			Write(' Original Program Copyright (c) 1991 Epic MegaGames        Press ... to abort');
+			TextColor(Black);
+			TextBackground(LightGray);
+			GotoXY(66, 25);
+			Write('ESC');
+			Window(1, 8, 80, 23);
+			TextColor(Yellow);
+			TextBackground(Black);
+			ClrScr;
+			TextColor(Yellow);
+			if not InputConfigure then
+				GameTitleExitRequested := true
+			else begin
+				TextColor(LightGreen);
+				if not VideoConfigure then
+					GameTitleExitRequested := true;
+			end
+		end else begin
+			{ Default to Keyboard only }
+			InputJoystickEnabled := false;
+			InputMouseEnabled := false;
 		end;
 		Window(1, 1, 80, 25);
 	end;
@@ -149,10 +153,9 @@ begin
 
 	StartupWorldFileName := 'TOWN';
 	ResourceDataFileName := 'ZZT.DAT';
-	ResetConfig := false;
 	GameTitleExitRequested := false;
-	GameConfigure;
 	ParseArguments;
+	GameConfigure;
 
 	if not GameTitleExitRequested then begin
 		VideoInstall(80, Blue);
@@ -165,8 +168,8 @@ begin
 
 		TickSpeed := 4;
 		DebugEnabled := false;
-		SavedGameFileName := 'SAVED';
-		SavedBoardFileName := 'TEMP';
+		SavedGameFileName := '';
+		SavedBoardFileName := '';
 		GenerateTransitionTable;
 		WorldCreate;
 
@@ -186,9 +189,10 @@ begin
 	if Length(ConfigRegistration) = 0 then begin
 		GamePrintRegisterMessage;
 	end else begin
-		Writeln;
-		Writeln('  Registered version -- Thank you for playing ZZT.');
-		Writeln;
+		Writeln('  Solid HUD by Dr. Dos -- https://github.com/DrDos0016/solid-hud');
+		Writeln('  https://museumofzzt.com');
+		Writeln('  Thank you for playing ZZT.');
+
 	end;
 
 	VideoShowCursor;

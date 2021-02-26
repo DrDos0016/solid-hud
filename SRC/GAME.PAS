@@ -843,6 +843,9 @@ function GameWorldLoad(extension: TString50): boolean;
 		GameWorldLoad := false;
 		textWindow.Selectable := true;
 
+		{ Duplicate the latest save name on the top line }
+		TextWindowAppend(textWindow, '$' + SavedGameFileName);
+
 		FindFirst('*' + extension, AnyFile, fileSearchRec);
 		while DosError = 0 do begin
 			entryName := Copy(fileSearchRec.Name, 1, Length(fileSearchRec.name) - 4);
@@ -864,6 +867,8 @@ function GameWorldLoad(extension: TString50): boolean;
 			entryName := textWindow.Lines[textWindow.LinePos]^;
 			if Pos(' ', entryName) <> 0 then
 				entryName := Copy(entryName, 1, Pos(' ', entryName) - 1);
+			if Pos('$', entryName) = 1 then
+				entryName := Copy(entryName, 2, Length(entryName) - 1);
 
 			GameWorldLoad := WorldLoad(entryName, extension, false);
 			TransitionDrawToFill(#219, $44);
