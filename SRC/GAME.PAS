@@ -838,13 +838,14 @@ function GameWorldLoad(extension: TString50): boolean;
 		TextWindowInitState(textWindow);
 		if extension = '.ZZT' then
 			textWindow.Title := 'ZZT Worlds'
-		else
+		else begin
 			textWindow.Title := 'Saved Games';
+			{ Duplicate the latest save name on the top line }
+			if SavedGameFileName <> '' then
+				TextWindowAppend(textWindow, '$' + SavedGameFileName);
+		end;
 		GameWorldLoad := false;
 		textWindow.Selectable := true;
-
-		{ Duplicate the latest save name on the top line }
-		TextWindowAppend(textWindow, '$' + SavedGameFileName);
 
 		FindFirst('*' + extension, AnyFile, fileSearchRec);
 		while DosError = 0 do begin
@@ -1434,6 +1435,7 @@ procedure GameDebugPrompt;
 		input: TString50;
 		i: integer;
 		toggle: boolean;
+		textWindow: TTextWindowState;
 	begin
 		input := '';
 		SidebarClearLine(4);
@@ -1501,6 +1503,23 @@ procedure GameDebugPrompt;
 			NoClip := toggle;
 		end else if (input = 'FREEZE') then begin
 			Frozen := toggle;
+		end else if (input = 'FLAGS') then begin
+			TextWindowInitState(textWindow);
+			textWindow.Title := 'Flag List';
+			TextWindowAppend(textWindow, '$Set Flags');
+
+			i := 0;
+			while (i < MAX_FLAG) do begin
+				i := i + 1;
+				if World.Info.Flags[i] <> '' then
+					TextWindowAppend(textWindow, World.Info.Flags[i]);
+			end;
+
+			TextWindowDrawOpen(textWindow);
+			TextWindowSelect(textWindow, false, false);
+			TextWindowDrawClose(textWindow);
+			TextWindowFree(textWindow);
+
 		end else if input = 'ZAP' then begin
 			for i := 0 to 3 do begin
 				BoardDamageTile(Board.Stats[0].X + NeighborDeltaX[i], Board.Stats[0].Y + NeighborDeltaY[i]);
@@ -1577,7 +1596,7 @@ procedure GamePlayLoop(boardChanged: boolean);
 					VideoWriteText(65, 18, $1E, ' Board Editor');
 				end;
 
-				VideoWriteText(65, 24, $1B, 'Solid '#219' HUD v02') { Solid HUD watermark }
+				VideoWriteText(65, 24, $1B, 'Solid '#219' HUD v' + SOLID_HUD_VERSION) { Solid HUD watermark }
 			end;
 		end;
 	begin
