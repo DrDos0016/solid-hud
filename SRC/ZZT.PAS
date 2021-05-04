@@ -192,6 +192,7 @@ begin
 		Writeln('  Solid HUD by Dr. Dos -- https://github.com/DrDos0016/solid-hud');
 		Writeln('  https://museumofzzt.com');
 		Writeln('  Thank you for playing ZZT.');
+		Writeln;
 
 	end;
 

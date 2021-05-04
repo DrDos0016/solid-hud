@@ -1435,6 +1435,8 @@ procedure ElementPlayerTick(statId: integer);
 					GameWorldSave('Save game:', SavedGameFileName, '.SAV');
 				end;
 				'P': begin
+					if Length(Board.Name) <> 0 then
+						VideoWriteText((59 - Length(Board.Name)) div 2, 0, $70, ' ' + Board.Name + ' ');
 					if World.Info.Health > 0 then
 						GamePaused := true;
 				end;

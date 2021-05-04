@@ -41,6 +41,7 @@ interface
 	procedure BoardOpen(boardId: integer);
 	procedure BoardChange(boardId: integer);
 	procedure BoardCreate;
+	procedure BorderCreate;
 	procedure WorldCreate;
 	procedure TransitionDrawToFill(chr: char; color: integer);
 	procedure BoardDrawTile(x, y: integer);
@@ -218,6 +219,7 @@ procedure BoardOpen(boardId: integer);
 		ptr: pointer;
 		ix, iy: integer;
 		rle: TRleTile;
+		tmp: string[1];
 	begin
 		if boardId > World.BoardCount then
 			boardId := World.Info.CurrentBoard;
@@ -265,6 +267,11 @@ procedure BoardOpen(boardId: integer);
 			end;
 
 		World.Info.CurrentBoard := boardId;
+		{ Mark board as visited }
+		tmp := Copy(Board.Name, Length(Board.Name), 1);
+		if tmp <> #251 then
+			Board.Name := Copy(Board.Name, 1, 49) + #251;
+		{input := Copy(input, 2, Length(input) - 1);}
 	end;
 
 procedure BoardChange(boardId: integer);
@@ -288,14 +295,7 @@ procedure BoardCreate;
 		for i := 0 to 3 do
 			Board.Info.NeighborBoards[i] := 0;
 
-		for ix := 0 to BOARD_WIDTH+1 do begin
-			Board.Tiles[ix][0] := TileBoardEdge;
-			Board.Tiles[ix][BOARD_HEIGHT+1] := TileBoardEdge;
-		end;
-		for iy := 0 to BOARD_HEIGHT+1 do begin
-			Board.Tiles[0][iy] := TileBoardEdge;
-			Board.Tiles[BOARD_WIDTH+1][iy] := TileBoardEdge;
-		end;
+		BorderCreate;
 
 		for ix := 1 to BOARD_WIDTH do
 			for iy := 1 to BOARD_HEIGHT do begin
@@ -322,6 +322,20 @@ procedure BoardCreate;
 		Board.Stats[0].Under.Color := 0;
 		Board.Stats[0].Data := nil;
 		Board.Stats[0].DataLen := 0;
+	end;
+
+procedure BorderCreate;
+	var
+		ix, iy, i: integer;
+	begin
+		for ix := 0 to BOARD_WIDTH+1 do begin
+			Board.Tiles[ix][0] := TileBoardEdge;
+			Board.Tiles[ix][BOARD_HEIGHT+1] := TileBoardEdge;
+		end;
+		for iy := 0 to BOARD_HEIGHT+1 do begin
+			Board.Tiles[0][iy] := TileBoardEdge;
+			Board.Tiles[BOARD_WIDTH+1][iy] := TileBoardEdge;
+		end;
 	end;
 
 procedure WorldCreate;
@@ -929,6 +943,7 @@ procedure AddStat(tx, ty: integer; element: byte; color, tcycle: integer; templa
 
 			if ty > 0 then
 				BoardDrawTile(tx, ty);
+			GameUpdateSidebar;
 		end;
 	end;
 
@@ -974,6 +989,8 @@ procedure RemoveStat(statId: integer);
 				Board.Stats[i - 1] := Board.Stats[i];
 			Board.StatCount := Board.StatCount - 1;
 		end;
+
+		GameUpdateSidebar;
 	end;
 
 function GetStatIdAt(x, y: integer): integer;
@@ -1434,8 +1451,12 @@ procedure GameDebugPrompt;
 	var
 		input: TString50;
 		i: integer;
+		seen: integer;
+		tmp: String[3];
 		toggle: boolean;
 		textWindow: TTextWindowState;
+		progString: String[42];
+
 	begin
 		input := '';
 		SidebarClearLine(4);
@@ -1503,6 +1524,27 @@ procedure GameDebugPrompt;
 			NoClip := toggle;
 		end else if (input = 'FREEZE') then begin
 			Frozen := toggle;
+		end else if (input = 'REPAIR') then begin
+			BorderCreate;
+			for i := 1 to BOARD_HEIGHT do
+				VideoWriteText(60, i, $10, ' ');
+		end else if (input = '%') then begin
+			seen := 0;
+			for i := 1 to World.BoardCount do begin
+				tmp := Copy(EditorGetBoardName(i, false), Length(EditorGetBoardName(i, false)), 1);
+				if tmp = #251 then
+					seen := seen + 1;
+			end;
+
+			tmp := Copy(Board.Name, Length(Board.Name), 1);
+			Str(seen, tmp);
+			progString := '[' + tmp + '/';
+			Str(World.BoardCount, tmp);
+			progString := progString + tmp + '] ';
+			Str((seen * 100) div World.BoardCount, tmp);
+			progString := progString + tmp + '%';
+			DisplayMessage(200, progString);
+
 		end else if (input = 'FLAGS') then begin
 			TextWindowInitState(textWindow);
 			textWindow.Title := 'Flag List';
@@ -1604,7 +1646,6 @@ procedure GamePlayLoop(boardChanged: boolean);
 		GameUpdateSidebar;
 
 		if JustStarted then begin
-			GameAboutScreen;
 			if Length(StartupWorldFileName) <> 0 then begin
 				SidebarClearLine(8);
 				VideoWriteText(69, 8, $1F, StartupWorldFileName);
@@ -1687,6 +1728,7 @@ procedure GamePlayLoop(boardChanged: boolean);
 				if unpauseGame then begin
 					{ Unpause }
 					GamePaused := false;
+					BoardDrawBorder;
 					{ The player might be invisible if the stat wasn't moved in the above code }
 					BoardDrawTile(Board.Stats[0].X, Board.Stats[0].Y);
 					SidebarClearLine(5);
