@@ -1391,8 +1391,8 @@ procedure ElementPlayerTick(statId: integer);
 				ElementDefs[Board.Tiles[X + InputDeltaX][Y + InputDeltaY].Element].TouchProc(
 					X + InputDeltaX, Y + InputDeltaY, 0, InputDeltaX, InputDeltaY);
 				if (InputDeltaX <> 0) or (InputDeltaY <> 0) then begin
-					if SoundEnabled and not SoundIsPlaying then
-						Sound(110);
+					{if SoundEnabled and not SoundIsPlaying then
+						Sound(110);}
 					if ElementDefs[Board.Tiles[X + InputDeltaX][Y + InputDeltaY].Element].Walkable or NoClip then begin
 						if SoundEnabled and not SoundIsPlaying then
 							NoSound;
