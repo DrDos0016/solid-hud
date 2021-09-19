@@ -49,11 +49,13 @@ Note that all cheats that use '+' and '-' minus to toggle state also set/clear f
 Clearing flags can be avoided by using '/' instead. This means `?/DARK` is a valid cheat to turn off darkness without activating anti-cheat measures used in
 certain worlds. (`?/DEBUG` is an exception as the debug check uses the flag being set or not to determine debug status).
 
-* `?TELEPORT` - Opens the board selection menu from the editor allow you to change boards during gameplay.
+* `?TELEPORT` and `?PASSAGE` - Opens the board selection menu from the editor allow you to change boards during gameplay.
 * `?SPEED` - Opens the speed selection prompt during gameplay.
 * `?+/-VISIBLE` toggles the display of invisible walls.
 * `?+/-NOCLIP` allows the player to walk on any element. WARNING, you still touch the element you're blocked by and can currently escape the board with this enabled.
 * `?+/-FREEZE` prevents all stats except the first (the player) from getting a chance to tick.
+* `?FLAGS` lists all currently set flags.
+* `?AMMO`, `?TORCHES`, and `?GEMS` now give 50, 30, and 50 of each counter.
 
 ## Additional Modifications
 
@@ -65,18 +67,37 @@ Other modifications have been made to make some aspects of ZZT easier to work wi
 
 * The audio buffer length is frequently non-zero when launching ZZT resulting in the buffer being "stuck" at one number until
 sound is toggled or a sound is played.
-* The HUD only updates when ZZT v3.2 would update it. This means that information displayed can become inaccurate over time. You
-can force a HUD refresh by toggling sound or using the cheat prompt. Future updates will update the sidebar at more appropriate times.
+* The new HUD will update the entire display when any of its information changes. This can be flickery on more active boards.
+* Something is off with the editor so that you can't just make a change to a title screen and hit escape without saving. Always manually save a world.
 
 ## Changelog
 
-v02
+**v05 (2021-09-19)**
+
+* `?AMMO`, `?TORCHES`, and `?GEMS` now give 10x their standard amounts
+* Object shooting now tracks if the shoot noise has been added to the sound queue recently making for quieter action sequences
+
+**v04**
+
+* Removed sound effects from the player moving. I'm sorry they bug me when I can hear them!
+* The most recently restored save file will be duplicated on top of the list of saves.
+
+**v03**
+
+* ZZT automatically starts in Keyboard + Color mode. Use `/c` to show the configuration screen.
+* The "About ZZT" window no longer opens automatically.
+* Added `?FLAGS` cheat.
+* `#put`, `#become`, and `#change` result in HUD updates for more accurate stat counts.
+* HUD updates are called in various stat creation/destroying functions.
+* `#set` and `#clear` result in HUD updates for more accurate flag counts.
+
+**v02**
+
 * Message windows no longer close when holding shift and a direction (unless joystick mode is enabled).
 * Implemented Asie's `?TELEPORT` cheat from [OpenZoo](https://github.com/asiekierka/OpenZoo/blob/master/Patches/Cheats/Cheat-Passage.patch).
 * Implemented Asie's `?SPEED` cheat from [OpenZoo](https://github.com/asiekierka/OpenZoo/blob/master/Patches/Cheats/Cheat-Passage.patch).
 * Recreated Asie's "Unpause on P" patch from [OpenZoo](https://github.com/asiekierka/OpenZoo/blob/master/Patches/Tweaks/Flexible-unpausing-behaviour.patch).
 * ZZT's editor no longer checks if the world is a save or locked.
-
 
 ## Credits
 

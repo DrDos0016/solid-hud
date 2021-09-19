@@ -27,7 +27,7 @@ unit GameVars;
 
 interface
 	const
-		SOLID_HUD_VERSION = '04';
+		SOLID_HUD_VERSION = '05';
 		MAX_STAT = 150;
 		MAX_ELEMENT = 53;
 		MAX_BOARD = 100;
@@ -152,6 +152,8 @@ interface
 		PlayerDirY: integer;
 		unkVar_0476: integer;
 		unkVar_0478: integer;
+
+        firstShot: boolean;
 
 		TransitionTable: array[1 .. 80*25] of TCoord;
 		LoadedGameFileName: TString50;

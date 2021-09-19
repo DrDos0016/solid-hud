@@ -717,6 +717,7 @@ function WorldLoad(filename, extension: TString50; titleOnly: boolean): boolean;
 		WorldLoad := false;
 		NoClip := false;
 		Frozen := false;
+		firstShot := false;
 		loadProgress := 0;
 
 		SidebarClearLine(4);
@@ -1489,15 +1490,15 @@ procedure GameDebugPrompt;
 		if input = 'HEALTH' then
 			World.Info.Health := World.Info.Health + 50
 		else if input = 'AMMO' then
-			World.Info.Ammo := World.Info.Ammo + 5
+			World.Info.Ammo := World.Info.Ammo + 50
 		else if input = 'KEYS' then
 			for i := 1 to 7 do World.Info.Keys[i] := true
 		else if input = 'TORCHES' then
-			World.Info.Torches := World.Info.Torches + 3
+			World.Info.Torches := World.Info.Torches + 30
 		else if input = 'TIME' then
 			World.Info.BoardTimeSec := World.Info.BoardTimeSec - 30
 		else if input = 'GEMS' then
-			World.Info.Gems := World.Info.Gems + 5
+			World.Info.Gems := World.Info.Gems + 50
 		else if input = 'DARK' then begin
 			Board.Info.IsDark := toggle;
 			TransitionDrawToBoard;
@@ -1675,6 +1676,8 @@ procedure GamePlayLoop(boardChanged: boolean);
 		CurrentStatTicked := Board.StatCount + 1;
 
 		repeat
+			if CurrentTick mod 5 = 0 then
+				firstShot := false;
 			if GamePaused then begin
 				if SoundHasTimeElapsed(TickTimeCounter, 25) then
 					pauseBlink := not pauseBlink;

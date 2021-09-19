@@ -645,8 +645,12 @@ procedure OopExecute(statId: integer; var position: integer; name: TString50);
 								goto ReadCommand;
 						end else if OopWord = 'SHOOT' then begin
 							OopReadDirection(statId, position, deltaX, deltaY);
-							if BoardShoot(E_BULLET, X, Y, deltaX, deltaY, SHOT_SOURCE_ENEMY) then
-								SoundQueue(2, #48#1#38#1);
+							if BoardShoot(E_BULLET, X, Y, deltaX, deltaY, SHOT_SOURCE_ENEMY) then begin
+								if not firstShot then begin
+									SoundQueue(2, #48#1#38#1);
+									firstShot := true;
+								end;
+							end;
 							stopRunning := true;
 						end else if OopWord = 'THROWSTAR' then begin
 							OopReadDirection(statId, position, deltaX, deltaY);
