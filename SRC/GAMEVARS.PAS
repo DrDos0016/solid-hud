@@ -27,7 +27,7 @@ unit GameVars;
 
 interface
 	const
-		SOLID_HUD_VERSION = '05';
+		SOLID_HUD_VERSION = '06';
 		MAX_STAT = 150;
 		MAX_ELEMENT = 53;
 		MAX_BOARD = 100;

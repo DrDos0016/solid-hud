@@ -1151,6 +1151,8 @@ procedure GameUpdateSidebar;
 			VideoWriteText(73, 7, $1E, numStr);
 			Str(World.Info.Torches, numStr);
 			VideoWriteText(64, 8, $1E, numStr);
+            Str(World.Info.EnergizerTicks, numStr);
+			VideoWriteText(73, 8, $1E, numStr);
 
 			{ Display Torch Tick Character -- Assumes TORCH_DURATION = 200 }
 			if World.Info.TorchTicks = 0 then
@@ -1502,7 +1504,7 @@ procedure GameDebugPrompt;
 		else if input = 'DARK' then begin
 			Board.Info.IsDark := toggle;
 			TransitionDrawToBoard;
-		end else if (input = 'PASSAGE') or (input = 'TELEPORT') then begin
+		end else if (input = 'PASSAGE') or (input = 'TELEPORT') or (input = 'BOARD') then begin
 			if GameStateElement = E_PLAYER then begin
 				BoardChange(EditorSelectBoard('Teleport to', World.Info.CurrentBoard, false));
 				GamePaused := true;

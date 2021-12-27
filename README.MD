@@ -72,6 +72,16 @@ sound is toggled or a sound is played.
 
 ## Changelog
 
+**v06 (2021-12-26)**
+
+* `?BOARD` is yet another alias for `?PASSAGE`.
+* Energizer duration remaining now displays in the proper row
+* Changes below were part of v05 but undocumented:
+* Pausing with "P" displays the current board title
+* When a board is visited a checkmark is added to the board title
+* `?%` will use these checkmarks to should how many board have been visited, the total boards in the file, and a percentage visited. This is a rough approximate of how far into a file you are.
+* `?REPAIR` will recreate ZZT's border of edge tiles
+
 **v05 (2021-09-19)**
 
 * `?AMMO`, `?TORCHES`, and `?GEMS` now give 10x their standard amounts

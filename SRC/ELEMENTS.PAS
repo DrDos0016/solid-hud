@@ -1472,7 +1472,10 @@ procedure ElementPlayerTick(statId: integer);
 			if World.Info.EnergizerTicks > 0 then begin
 				World.Info.EnergizerTicks := World.Info.EnergizerTicks - 1;
 				Str(World.Info.EnergizerTicks, numStr);
-				VideoWriteText(73, 9, $1E, numStr);
+
+                if World.Info.EnergizerTicks < 10 then
+                    VideoWriteText(73, 8, $10, '.....');
+                VideoWriteText(73, 8, $1E, numStr);
 
 				if World.Info.EnergizerTicks = 10 then
 					SoundQueue(9, #32#3#26#3#23#3#22#3#21#3#19#3#16#3)
