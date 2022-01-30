@@ -31,6 +31,7 @@ interface
 		TVideoLine = string[80];
 		TVideoWriteTextProc = procedure(x, y, color: byte; text: TVideoLine);
 	const
+		PORT_CGA_MODE = $03D8;
 		PORT_CGA_PALETTE = $03D9;
 	var
 		VideoWriteText: TVideoWriteTextProc;
@@ -42,6 +43,7 @@ interface
 	procedure VideoHideCursor;
 	procedure VideoSetBorderColor(value: integer);
 	procedure VideoMove(x, y, chars: integer; data: pointer; toVideo: boolean);
+	procedure VideoSetBlink(value: boolean);
 
 implementation
 uses Crt, Dos;
@@ -437,6 +439,21 @@ procedure VideoMove(x, y, chars: integer; data: pointer; toVideo: boolean);
 			Move(Ptr(VideoTextSegment, offset)^, data^, chars * 2);
 	end;
 
+procedure VideoSetBlink(value: boolean);
+	var
+		regs: Registers;
+	begin
+		{ CGA route }
+		if value then
+			Port[PORT_CGA_MODE] := Port[PORT_CGA_MODE] or $20
+		else
+			Port[PORT_CGA_MODE] := Port[PORT_CGA_MODE] and $DF;
+		{ EGA/VGA route }
+		regs.AX := $1003;
+		regs.BH := 0;
+		regs.BL := Byte(value);
+		Intr($10, regs);
+	end;
 
 begin
 	VideoBorderColor := 0;
