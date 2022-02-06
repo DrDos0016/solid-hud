@@ -1531,6 +1531,8 @@ procedure GameDebugPrompt;
 			BorderCreate;
 			for i := 1 to BOARD_HEIGHT do
 				VideoWriteText(60, i, $10, ' ');
+		end else if (input = 'BLINK') then begin
+			VideoSetBlink(toggle);
 		end else if (input = '%') then begin
 			seen := 0;
 			for i := 1 to World.BoardCount do begin
