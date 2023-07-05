@@ -717,6 +717,8 @@ function WorldLoad(filename, extension: TString50; titleOnly: boolean): boolean;
 		WorldLoad := false;
 		NoClip := false;
 		Frozen := false;
+		Stars := true;
+        LastCheat := '';
 		firstShot := false;
 		loadProgress := 0;
 
@@ -1469,6 +1471,11 @@ procedure GameDebugPrompt;
 		for i := 1 to Length(input) do
 			input[i] := UpCase(input[i]);
 
+		if input = '!' then begin
+            input := LastCheat;
+		end;
+		LastCheat := input;
+
 		toggle := true;
 		if (input[1] = '+') or (input[1] = '-') then begin
 			if input[1] = '-' then
@@ -1501,9 +1508,13 @@ procedure GameDebugPrompt;
 			World.Info.BoardTimeSec := World.Info.BoardTimeSec - 30
 		else if input = 'GEMS' then
 			World.Info.Gems := World.Info.Gems + 50
+		else if input = 'SCORE' then
+			World.Info.Score := World.Info.Score + 50
 		else if input = 'DARK' then begin
 			Board.Info.IsDark := toggle;
 			TransitionDrawToBoard;
+        end else if input = 'ENERGIZE' then begin
+			World.Info.EnergizerTicks := World.Info.EnergizerTicks + 75
 		end else if (input = 'PASSAGE') or (input = 'TELEPORT') or (input = 'BOARD') then begin
 			if GameStateElement = E_PLAYER then begin
 				BoardChange(EditorSelectBoard('Teleport to', World.Info.CurrentBoard, false));
@@ -1527,6 +1538,8 @@ procedure GameDebugPrompt;
 			NoClip := toggle;
 		end else if (input = 'FREEZE') then begin
 			Frozen := toggle;
+		end else if (input = 'STARS') then begin
+			Stars := toggle;
 		end else if (input = 'REPAIR') then begin
 			BorderCreate;
 			for i := 1 to BOARD_HEIGHT do

@@ -43,25 +43,32 @@ property is set.
 
 ## Cheats
 
-Several cheats have also been added to make it easier to deal with harsh game design.
+Several cheats have also been added as well as existing cheats modified in order to make it easier to deal with harsh game design and bugs.
 
 Note that all cheats that use '+' and '-' minus to toggle state also set/clear flags with those names. Setting flags can be avoided by simply omitting the '+'.
 Clearing flags can be avoided by using '/' instead. This means `?/DARK` is a valid cheat to turn off darkness without activating anti-cheat measures used in
 certain worlds. (`?/DEBUG` is an exception as the debug check uses the flag being set or not to determine debug status).
 
-* `?TELEPORT` and `?PASSAGE` - Opens the board selection menu from the editor allow you to change boards during gameplay.
-* `?SPEED` - Opens the speed selection prompt during gameplay.
-* `?+/-VISIBLE` toggles the display of invisible walls.
-* `?+/-NOCLIP` allows the player to walk on any element. WARNING, you still touch the element you're blocked by and can currently escape the board with this enabled.
-* `?+/-FREEZE` prevents all stats except the first (the player) from getting a chance to tick.
-* `?FLAGS` lists all currently set flags.
 * `?AMMO`, `?TORCHES`, and `?GEMS` now give 50, 30, and 50 of each counter.
+* `?ENERGIZE` gives 75 energize ticks to the player. This is the length of an energizer item.
+* `?FLAGS` lists all currently set flags.
+* `?+/-FREEZE` prevents all stats except the first (the player) from getting a chance to tick.
+* `?+/-NOCLIP` allows the player to walk on any element. WARNING, you still touch the element you're blocked by and can currently escape the board with this enabled.
+* `?PASSAGE` and `?TELEPORT` - Opens the board selection menu from the editor allow you to change boards during gameplay.
+* `?REPAIR` will reconstruct the border of a board if the player has used the zap cheat while on an edge.
+* `?SCORE` gives 50 points
+* `?SPEED` - Opens the speed selection prompt during gameplay.
+* `?+/-STARS` will cause all stars to set their remaining duration to 0 when they tick. You can still be harmed by a star thrown directly onto the player.
+* `?+/-VISIBLE` toggles the display of invisible walls.
+* `%` will display the ratio of boards that have been visited and the total number of boards in the world as a fraction and percentage
+* `?!` will repeat the last input entered on the cheat prompt regardless of whether or not it was valid.
 
 ## Additional Modifications
 
 Other modifications have been made to make some aspects of ZZT easier to work with.
 
 * The built-in ZZT editor will now open worlds locked with the `SECRET` flag as well as renamed save files
+* The initial configuration screen automatically defaults to Keyboard input and Color graphics. Launch SolidHUD with the argument `/c` to display the configuration screen.
 
 ## Known Bugs
 
@@ -71,6 +78,10 @@ sound is toggled or a sound is played.
 * Something is off with the editor so that you can't just make a change to a title screen and hit escape without saving. Always manually save a world.
 
 ## Changelog
+
+**v07 (2023-07-04)**
+
+* Added `?STARS`, `?SCORE`, `?ENERGIZE`, and `?!` cheats.
 
 **v06 (2021-12-26)**
 

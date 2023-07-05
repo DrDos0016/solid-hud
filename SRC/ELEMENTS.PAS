@@ -678,6 +678,9 @@ procedure ElementStarTick(statId: integer);
 	begin
 		with Board.Stats[statId] do begin
 			P2 := P2 - 1;
+            if (not Stars) then begin
+                P2 := 0;
+            end;
 			if P2 <= 0 then begin
 				RemoveStat(statId);
 			end else if (P2 mod 2) = 0 then begin

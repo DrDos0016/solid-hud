@@ -27,7 +27,7 @@ unit GameVars;
 
 interface
 	const
-		SOLID_HUD_VERSION = '06';
+		SOLID_HUD_VERSION = '07';
 		MAX_STAT = 150;
 		MAX_ELEMENT = 53;
 		MAX_BOARD = 100;
@@ -213,7 +213,9 @@ interface
 		RunConfig: boolean;
 		JustStarted: boolean;
 		NoClip: boolean;
+        Stars: boolean;
 		Frozen: boolean;
+        LastCheat: TString50;
 
 		WorldFileDescCount: integer;
 		WorldFileDescKeys: array[1 .. 10] of TString50;
